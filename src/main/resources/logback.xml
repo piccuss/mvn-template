@@ -1,0 +1,38 @@
+<configuration>
+    <substitutionProperty name="logger.app.name" value="mvn-template" />
+    <substitutionProperty name="logger.package.name" value="mvn.template" />
+    <substitutionProperty name="logger.package.level" value="DEBUG" />
+    <substitutionProperty name="logger.dir" value="logs" />
+
+    <statusListener class="ch.qos.logback.core.status.OnConsoleStatusListener" />
+    <appender name="ROLLING" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${logger.dir}/${logger.app.name}.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!-- rollover daily -->
+            <fileNamePattern>${logger.dir}/${logger.app.name}-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <!-- each file should be at most 100MB, keep 60 days worth of history, but at most 20GB -->
+            <maxFileSize>100MB</maxFileSize>
+            <maxHistory>60</maxHistory>
+            <totalSizeCap>20GB</totalSizeCap>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] |-%level in %logger{36}.%method:%line - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <!-- encoders are assigned the type
+             ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] |-%level in %logger{36}.%method:%line - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <logger name="${logger.package.name}" level="${logger.package.level}" >
+        <appender-ref ref="ROLLING" />
+    </logger>
+
+    <root level="debug">
+        <appender-ref ref="STDOUT" />
+    </root>
+</configuration>
